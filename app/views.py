@@ -141,7 +141,7 @@ def get_submissions():
                     score = s.first().score
                 else:
                     score = "null"
-                row += ',{{"v":{}}}'.format(score)
+                row += ',{{"v":{:.2f}}}'.format(score * 100)
             row += "]},"
             rows += row
 
