@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="home">
+    <div id="title">Welcome to our evaluation system</div>
+    {% if current_user.is_authenticated %}
+    <div>
+        {% if current_user.has_role('admin') %}
+        <a href="/scores">Scores</a> | <a href="/admin">Admin</a>
+        {% else %}
+        <a href="/submission">Submit predictions</a> | <a href="/scores">Scores</a>
+        {% endif %}
+        {% endif %}
+
+</section>
+{% endblock %}

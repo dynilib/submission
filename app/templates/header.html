@@ -1,0 +1,16 @@
+<div id="header" style="margin-bottom=1em;">
+    {% if request.path != url_for('home') %}
+    <div style="float: left;"><a href="/">Home</a></div>
+    {% endif %}
+    <div style="float: right;">
+        {% if current_user.is_authenticated %}
+        <span>You are logged as {{ current_user.username }} | <a href="{{ url_for('security.logout') }}">Logout</a></span>
+        {% else %}
+        <span> <a href="{{ url_for('security.login') }}">Login</a> |
+            <a href="{{ url_for('security.register')
+            }}">Register</a></span>
+        {% endif %}
+    </div>
+    <div style="clear: both"></div>
+</div>
+

@@ -1,0 +1,41 @@
+html, body, #container { height: 100%; }
+body > #container { height: auto; min-height: 100%; }
+
+body{
+    font-family: 'Lato', 'Helvetica',Sans-serif;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#content {
+    clear:both;
+    padding-bottom: 3em;
+}
+
+#footer {
+    clear: both;
+    position: relative;
+    z-index: 10;
+    height: 3em;
+    margin-top: -3em;
+    float: right;
+}
+section {
+    padding: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+section#home #title {
+    font-size: 2em;
+    font-weight: 700;
+}
+
+.form-control label {
+    width: 15em;
+    display: inline-block;
+}
+

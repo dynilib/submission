@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+        {% block head %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700'
+                               rel='stylesheet' type='text/css'>
+        <title>{% block title %}Evaluation{% endblock %}</title>
+        {% endblock %}
+    </head>
+
+    <body>
+
+            <div id="container">
+
+                {% include 'header.html' %}
+
+                <div id="content">{% block content %}{% endblock %}</div>
+
+            </div>
+            <div id="footer">
+                {% block footer %}
+                Université de Toulon - <script>document.write(new
+Date().getFullYear())</script>
+                {% endblock %}
+            </div>
+    </body>
+{% block scripts %}{% endblock %}
+</html>

@@ -1,0 +1,7 @@
+migrations
+.cache
+__pycache__/
+*.swp
+*.py[cod]
+*/files/*
+
