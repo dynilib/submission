@@ -2,7 +2,7 @@ import os
 import io
 from datetime import datetime, timedelta
 
-from flask import flash, render_template, request, redirect, url_for, jsonify
+from flask import flash, render_template, request, redirect, url_for, jsonify, send_from_directory, abort
 from werkzeug.utils import secure_filename
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import FileUploadField
@@ -236,6 +236,32 @@ class CompetitionAdmin(AdminModelView):
         }
     }
     
+
+@login_required
+@app.route('/groundtruth/<filename>')
+def get_groundtruth(filename):
+
+    if Competition.query.filter_by(groundtruth=filename).count() == 0:
+        abort(404)
+
+    if login.current_user.has_role('admin'):
+        return send_from_directory(app.config['GROUNDTRUTH_FOLDER'],
+                                   filename)
+    else:
+        abort(403)
+
+@login_required
+@app.route('/submissions/<filename>')
+def get_submission(filename):
+
+    submissions = Submission.query.filter_by(filename=filename)
+    
+    # make sure the current user is whether admin or the user who actually submitted the file    
+    if ( submissions.count() > 0 and (login.current_user.has_role('admin') or login.current_user.id == submissions.first().user_id)):
+        return send_from_directory(app.config['UPLOAD_FOLDER'],
+                                   filename)
+    else:
+        abort(403)
 
 class Error(Exception):
     pass
