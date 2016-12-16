@@ -29,9 +29,11 @@ $ docker run \
 `$ docker run --name submission --link submission_db:submission_db -p 5455:80 -v $(pwd)/app:/app -d submission`
  
 ### 6 - Initialize db and migrate (https://flask-migrate.readthedocs.io/en/latest/)
-`$ docker exec submission python /app/manage.py db init`
-`$ docker exec submission python /app/manage.py db migrate`
-`$ docker exec submission python /app/manage.py db upgrade`
+```
+$ docker exec submission python /app/manage.py db init
+$ docker exec submission python /app/manage.py db migrate
+$ docker exec submission python /app/manage.py db upgrade
+```
  
 ### 7 - Enjoy
 Now the app is available at http://example.com:5455
