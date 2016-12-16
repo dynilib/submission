@@ -90,12 +90,12 @@ def upload_file():
 @login_required
 def get_score(filename, competition_id):
 
-    regex = r'(\d+),(\d+\.\d+|\d+)'
+    regex = r'(.+),(\d+\.\d+|\d+)'
 
     # parse files
-    predictions = np.fromregex(filename, regex, [('id', np.int32), ('v0', np.float32)])
+    predictions = np.fromregex(filename, regex, [('id', 'S128'), ('v0', np.float32)])
     groundtruth_filename = os.path.join(app.config['GROUNDTRUTH_FOLDER'], Competition.query.get(competition_id).groundtruth)
-    groundtruth = np.fromregex(groundtruth_filename, regex, [('id', np.int32), ('v0', np.float32)])
+    groundtruth = np.fromregex(groundtruth_filename, regex, [('id', 'S128'), ('v0', np.float32)])
 
     # sort data
     predictions.sort(order='id')
