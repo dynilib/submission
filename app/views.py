@@ -139,9 +139,9 @@ def get_submissions():
                 s = submissions.filter(cast(Submission.submitted_on, Date)==d).filter(Submission.user_id==u)
                 if s.count() > 0:
                     score = s.first().score
+                    row += ',{{"v":{:.2f}}}'.format(score * 100)
                 else:
-                    score = "null"
-                row += ',{{"v":{:.2f}}}'.format(score * 100)
+                    row += ',{"v":"null"}'
             row += "]},"
             rows += row
 
