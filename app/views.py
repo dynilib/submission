@@ -118,8 +118,8 @@ def get_submissions():
     if request.method == 'POST':
         competition_id = request.form.get('competitions')
         submissions = Submission.query.filter(Submission.competition_id==competition_id)
-        if not login.current_user.has_role('admin'):
-            submissions = submissions.filter_by(user_id=login.current_user.id)
+#        if not login.current_user.has_role('admin'):
+#            submissions = submissions.filter_by(user_id=login.current_user.id)
 
         count = submissions.count()
 
