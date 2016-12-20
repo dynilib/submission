@@ -30,8 +30,10 @@ section {
 }
 
 section#home #title {
+    margin-top: 2em;
     font-size: 2em;
     font-weight: 700;
+    text-align: center;
 }
 
 .form-control label {

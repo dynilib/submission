@@ -2,7 +2,8 @@
 
 {% block content %}
 <section id="home">
-    <div id="title">Welcome to our evaluation system</div>
+    <img src="/static/images/LogoBAD.png"/>
+    <div id="title">Bird Audio Detection challenge</div>
     {% if current_user.is_authenticated %}
     <div>
         {% if current_user.has_role('admin') %}
