@@ -73,7 +73,7 @@ def upload_file():
                 submission.user_id = login.current_user.id
                 submission.competition_id = competition_id
                 submission.filename = filename
-                submission.score = get_score(filepath, competition_id)
+                submission.previewscore, submission.score = get_scores(filepath, competition_id)
                 submission.submitted_on = now.replace(microsecond=0)
                 db.session.add(submission)
                 db.session.commit()
@@ -88,7 +88,8 @@ def upload_file():
 
 
 @login_required
-def get_score(filename, competition_id):
+def get_scores(filename, competition_id):
+    "Returns (previewscore, score)"
 
     regex = r'(.+),(\d+\.\d+|\d+)'
 
@@ -104,7 +105,12 @@ def get_score(filename, competition_id):
     if predictions['id'].size == 0 or not np.array_equal(predictions['id'], groundtruth['id']):
         raise ParsingError("Error parsing the submission file. Make sure it has the right format and contains the right ids.")
     
-    return roc_auc_score(groundtruth['v0'], predictions['v0'])
+    # partition the data indices into two sets and evaluate separately
+    splitpoint = int(np.round(len(groundtruth) * 0.15))
+    score_p = roc_auc_score(groundtruth['v0'][:splitpoint], predictions['v0'][:splitpoint])
+    score_f = roc_auc_score(groundtruth['v0'][splitpoint:], predictions['v0'][splitpoint:])
+    
+    return (score_p, score_f)
 
 @app.route('/scores', methods=['GET', 'POST'])
 @login_required
@@ -138,8 +144,8 @@ def get_submissions():
             for u in user_ids:
                 s = submissions.filter(cast(Submission.submitted_on, Date)==d).filter(Submission.user_id==u)
                 if s.count() > 0:
-                    score = s.first().score
-                    row += ',{{"v":{:.2f}}}'.format(score * 100)
+                    previewscore = s.first().previewscore
+                    row += ',{{"v":{:.2f}}}'.format(previewscore * 100)
                 else:
                     row += ',{"v":"null"}'
             row += "]},"
