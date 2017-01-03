@@ -73,7 +73,7 @@ def upload_file():
                 submission.user_id = login.current_user.id
                 submission.competition_id = competition_id
                 submission.filename = filename
-                submission.previewscore, submission.score = get_scores(filepath, competition_id)
+                (submission.previewscore, submission.score) = get_scores(filepath, competition_id)
                 submission.submitted_on = now.replace(microsecond=0)
                 db.session.add(submission)
                 db.session.commit()
