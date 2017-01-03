@@ -4,8 +4,10 @@ It is wrapped in a Docker container with an nginx and uwsgi servers, managed by 
 # INSTALLATION
  
 ### 1 - Clone the repository
-`$ git clone ...`
-`$ cd /path/to/submission`
+```
+$ git clone ...
+$ cd /path/to/submission
+```
  
 ### 2 - Create the db backup volume to be mounted
 `$ mkdir db_backup`
