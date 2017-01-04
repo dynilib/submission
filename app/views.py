@@ -75,6 +75,7 @@ def upload_file():
                 submission.filename = filename
                 submission.score = get_score(filepath, competition_id)
                 submission.submitted_on = now.replace(microsecond=0)
+                submission.comment = request.form.get("comment")
                 db.session.add(submission)
                 db.session.commit()
 
@@ -138,10 +139,16 @@ def get_submissions():
             for u in user_ids:
                 s = submissions.filter(cast(Submission.submitted_on, Date)==d).filter(Submission.user_id==u)
                 if s.count() > 0:
-                    score = s.first().score
-                    row += ',{{"v":{:.2f}}}'.format(score * 100)
+                    score = s.first().score * 100
+                    row += ',{{"v":{:.2f}}}'.format(score)
+                    row += ',{{"v":"<div style=\\"padding:5px\\"><b>Username</b>: {}<br><b>Score</b>: {:.2f}<br><b>Comment</b>: {}</div>"}}'.format(
+                                User.query.get(u).username,
+                                score,
+                                s.first().comment)
                 else:
                     row += ',{"v":"null"}'
+                    row += ',{"v":"null"}'
+
             row += "]},"
             rows += row
 
@@ -150,7 +157,8 @@ def get_submissions():
         {{   
           "cols": [
                 {{"id":"","label":"Date","pattern":"","type":"datetime"}},
-                {0}
+                {0},
+                {{"id":"","label":"Comment","pattern":"","type":"string","role":"tooltip","p":{{"html":true}}}}
               ],  
           "rows": [     
                 {1}

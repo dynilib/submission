@@ -41,3 +41,6 @@ section#home #title {
     display: inline-block;
 }
 
+form .fieldvalue {
+    padding-bottom: 2em;
+}

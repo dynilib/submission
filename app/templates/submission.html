@@ -3,14 +3,25 @@
 {% block content %}
 <title>Submit predictions</title>
 <h1>Submit predictions</h1>
-<form action="" method=post enctype=multipart/form-data>
-    <select name="competitions">
-    {% for c in competitions %}
-    <option value="{{ c.id }}">{{ c.name }}</option>
-    {% endfor %}
-    </select>
-  <input type=file name=file>
-  <input type=submit value="Submit">
+<form id="submission-form" action="" method=post enctype=multipart/form-data>
+    <div class="fieldtext">Submission file:</div>
+    <div class="fieldvalue">
+        <select name="competitions">
+            {% for c in competitions %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select>
+        <input type=file name=file>
+    </div>
+    <div class="fieldtext">Public comment:</div>
+    <div class="fieldvalue">
+        <textarea id="comment" name="comment"
+                               placeholder="Comment (max 500 chars)"
+                               maxlength=500 rows=10 cols=40></textarea>
+    </div>
+    <div>
+        <input type=submit value="Submit">
+    </div>
 </form>
 
 {% with messages = get_flashed_messages() %}
