@@ -157,14 +157,13 @@ def get_submissions():
         {{   
           "cols": [
                 {{"id":"","label":"Date","pattern":"","type":"datetime"}},
-                {0},
-                {{"id":"","label":"Comment","pattern":"","type":"string","role":"tooltip","p":{{"html":true}}}}
+                {0}
               ],  
           "rows": [     
                 {1}
               ]
         }}""".format(
-                ','.join('{{"id":"","label":"{}","pattern":"","type":"number"}}'.format(User.query.get(u).username) for u in user_ids),
+                ','.join('{{"id":"","label":"{}","pattern":"","type":"number"}},{{"id":"","label":"Comment","pattern":"","type":"string","role":"tooltip","p":{{"html":true}}}}'.format(User.query.get(u).username) for u in user_ids),
                 rows
                 )
 
