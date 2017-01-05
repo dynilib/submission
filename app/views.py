@@ -88,7 +88,7 @@ def upload_file():
         return redirect(request.url)
 
 
-@login_required
+#@login_required
 def get_scores(filename, competition_id):
     "Returns (preview_score, score)"
 
@@ -145,9 +145,7 @@ def get_submissions():
             for u in user_ids:
                 s = submissions.filter(cast(Submission.submitted_on, Date)==d).filter(Submission.user_id==u)
                 if s.count() > 0:
-                    score = s.first().
-                    
-                    _score * 100
+                    score = s.first().preview_score * 100
                     row += ',{{"v":{:.2f}}}'.format(score)
                     row += ',{{"v":"<div style=\\"padding:5px\\"><b>Username</b>: {}<br><b>Score</b>: {:.2f}<br><b>Comment</b>: {}</div>"}}'.format(
                                 User.query.get(u).username,
