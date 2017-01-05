@@ -147,7 +147,8 @@ def get_submissions():
                 if s.count() > 0:
                     score = s.first().preview_score * 100
                     row += ',{{"v":{:.2f}}}'.format(score)
-                    row += ',{{"v":"<div style=\\"padding:5px\\"><b>Username</b>: {}<br><b>Score</b>: {:.2f}<br><b>Comment</b>: {}</div>"}}'.format(
+                    row += ',{{"v":"<div style=\\"padding:5px\\"><b>Date</b>: {}<br><b>Username</b>: {}<br><b>Score</b>: {:.2f}<br><b>Comment</b>: {}</div>"}}'.format(
+                                s.first().submitted_on.strftime("%b %d, %Y"),
                                 User.query.get(u).username,
                                 score,
                                 s.first().comment)
