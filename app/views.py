@@ -73,8 +73,9 @@ def upload_file():
                 submission.user_id = login.current_user.id
                 submission.competition_id = competition_id
                 submission.filename = filename
-                (submission.previewscore, submission.score) = get_scores(filepath, competition_id)
+                (submission.preview_score, submission.score) = get_scores(filepath, competition_id)
                 submission.submitted_on = now.replace(microsecond=0)
+                submission.comment = request.form.get("comment")
                 db.session.add(submission)
                 db.session.commit()
 
@@ -89,7 +90,7 @@ def upload_file():
 
 @login_required
 def get_scores(filename, competition_id):
-    "Returns (previewscore, score)"
+    "Returns (preview_score, score)"
 
     regex = r'(.+),(\d+\.\d+|\d+)'
 
@@ -144,10 +145,18 @@ def get_submissions():
             for u in user_ids:
                 s = submissions.filter(cast(Submission.submitted_on, Date)==d).filter(Submission.user_id==u)
                 if s.count() > 0:
-                    previewscore = s.first().previewscore
-                    row += ',{{"v":{:.2f}}}'.format(previewscore * 100)
+                    score = s.first().
+                    
+                    _score * 100
+                    row += ',{{"v":{:.2f}}}'.format(score)
+                    row += ',{{"v":"<div style=\\"padding:5px\\"><b>Username</b>: {}<br><b>Score</b>: {:.2f}<br><b>Comment</b>: {}</div>"}}'.format(
+                                User.query.get(u).username,
+                                score,
+                                s.first().comment)
                 else:
                     row += ',{"v":"null"}'
+                    row += ',{"v":"null"}'
+
             row += "]},"
             rows += row
 
@@ -162,7 +171,7 @@ def get_submissions():
                 {1}
               ]
         }}""".format(
-                ','.join('{{"id":"","label":"{}","pattern":"","type":"number"}}'.format(User.query.get(u).username) for u in user_ids),
+                ','.join('{{"id":"","label":"{}","pattern":"","type":"number"}},{{"id":"","label":"Comment","pattern":"","type":"string","role":"tooltip","p":{{"html":true}}}}'.format(User.query.get(u).username) for u in user_ids),
                 rows
                 )
 

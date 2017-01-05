@@ -60,6 +60,7 @@ class Submission(db.Model):
     submitted_on = db.Column(db.DateTime())
     comment = db.Column(db.Text)
     score = db.Column(db.Float)
+    preview_score = db.Column(db.Float)
     
     def __repr__(self):
         return "{}".format(self.id)
