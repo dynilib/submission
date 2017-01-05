@@ -1,9 +1,9 @@
 import os
 import io
 from datetime import datetime, timedelta
+import uuid
 
 from flask import flash, render_template, request, redirect, url_for, jsonify, send_from_directory, abort
-from werkzeug.utils import secure_filename
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import FileUploadField
 from flask_admin import AdminIndexView
@@ -64,7 +64,7 @@ def upload_file():
 
             if file:
 
-                filename = secure_filename(file.filename)
+                filename = str(uuid.uuid4()) + ".csv"
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 
