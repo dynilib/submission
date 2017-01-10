@@ -187,6 +187,9 @@ class MyAdminIndexView(AdminIndexView):
 
 class AdminModelView(ModelView):
 
+    can_set_page_size = True
+    can_export = True
+
     def is_accessible(self):
         return login.current_user.has_role('admin')
 
