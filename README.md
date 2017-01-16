@@ -1,5 +1,13 @@
-Submission is a [Flask](http://flask.pocoo.org/) application to manage submissions for the [2016 bird audio detection challenge](http://machine-listening.eecs.qmul.ac.uk/bird-audio-detection-challenge/). 
-It is wrapped in a Docker container with an nginx and uwsgi servers, managed by supervisord. The Docker part is largely inspired by (https://github.com/tiangolo/uwsgi-nginx-flask-docker).
+Submission is the [Flask](http://flask.pocoo.org/) application that managed submissions for the [2016 Bird Audio Detection challenge](http://machine-listening.eecs.qmul.ac.uk/bird-audio-detection-challenge/). 
+It is wrapped in a Docker container, largely inspired by (https://github.com/tiangolo/uwsgi-nginx-flask-docker), including an nginx and an uwsgi servers managed by supervisord.
+
+The main features include:
+* Basic user management (register/login/logout)
+* Admin panel to manage admin users and competitions
+* Automatic score computation from uploaded submission files
+* Score visualisation with Google Charts
+
+Submission is aimed at being improved by the community to offer a free and generic Kaggle-like challenge platform. Any contribution is welcome!
 
 # INSTALLATION
  
@@ -61,7 +69,7 @@ After any change, restart uwsgi:
  
 # ADMINISTRATION
  
- The administration panel can be found at http://example.com:5455/admin.
+ The administration panel can be found at http://&lt;yourdomain&gt;:5455/admin.
  
 ### 1 - Login using the default admin user
 email: admin@example.com
@@ -69,10 +77,10 @@ password: changeme
  
 ### 2 - VERY IMPORTANT: change the admin password
 
-This can be done by editing the admin user data in http://example.com:5455/admin/user/.
+This can be done by editing the admin user data in http://&lt;yourdomain&gt;:5455/admin/user/.
  
 ### 3 - Create a competition
-Competitions can be created from http://example.com:5455/admin/competition/. 
+Competitions can be created from http://&lt;yourdomain&gt;:5455/admin/competition/. 
 For each competition a ground truth must be uploaded, in the format: 
  
 `<id>,<detection probability> `
@@ -91,8 +99,12 @@ $ cat groundtruth.csv
 ```
 
 ### 4 - Scores
-User scores can be seen graphically at http://example.com:5455/scores.
+User scores can be seen graphically at http://&lt;yourdomain&gt;:5455/scores.
 
-Submissions ca be seen in the administration panel at http://example.com:5455/admin/submission/.
+Submissions ca be seen in the administration panel at http://&lt;yourdomain&gt;:5455/admin/submission/.
 
 The submission files are stored in the path specified in config.py.
+
+# LICENSE
+
+Submission is under [ISC license](https://en.wikipedia.org/wiki/ISC_license).
