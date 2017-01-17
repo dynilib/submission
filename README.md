@@ -107,4 +107,10 @@ The submission files are stored in the path specified in config.py.
 
 # LICENSE
 
-Submission is under [ISC license](https://en.wikipedia.org/wiki/ISC_license).
+Submission is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
+
+# Contact
+
+Julien Ricard
+Hervé Glotin
+dyni.contact@gmail.com
