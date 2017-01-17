@@ -1,6 +1,6 @@
 ISC License
 
-Copyright (c) ''2017'', ''University of Toulon''
+Copyright (c) ''2017'', ''DYNI, University of Toulon''
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
