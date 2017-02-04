@@ -13,8 +13,8 @@ Submission is aimed at being improved by the community to offer a free and gener
  
 ### 1 - Clone the repository
 ```
-$ git clone ...
-$ cd /path/to/submission
+$ git clone https://github.com/julj/submission.git
+$ cd submission
 ```
  
 ### 2 - Create the db backup volume to be mounted
