@@ -6,14 +6,14 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-from database import db
 from forms import ExtendedRegisterForm
 
 
-app = Flask(__name__)
-app.config.from_object('config')
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_pyfile('config.py')
 
-db.init_app(app)
+
+db = SQLAlchemy(app)
 
 # create upload folder
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -41,4 +41,3 @@ admin.add_view(AdminModelView(Role, db.session))
 admin.add_view(UserAdmin(User, db.session))
 admin.add_view(CompetitionAdmin(Competition, db.session))
 admin.add_view(AdminModelView(Submission, db.session))
-
