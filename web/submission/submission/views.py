@@ -16,6 +16,7 @@ from sqlalchemy import Date, cast
 
 import numpy as np
 from sklearn.metrics import roc_auc_score
+from scipy.stats import import hmean
 
 from submission import app, security, db
 from submission.models import User, Competition, Submission
@@ -92,12 +93,10 @@ def upload_file():
 def get_scores(filename, competition_id):
     "Returns (preview_score, score)"
 
-    regex = r'(.+),(\d+\.\d+|\d+)'
-
     # parse files
-    predictions = np.fromregex(filename, regex, [('id', 'S128'), ('v0', np.float32)])
+    predictions = np.fromregex(filename, r'(.+),(\d+\.\d+|\d+)', [('id', 'U128'), ('v0', np.float32)])
     groundtruth_filename = os.path.join(app.config['GROUNDTRUTH_FOLDER'], Competition.query.get(competition_id).groundtruth)
-    groundtruth = np.fromregex(groundtruth_filename, regex, [('id', 'S128'), ('v0', np.float32)])
+    groundtruth = np.fromregex(groundtruth_filename, r'(.+),(.+),(\d+\.\d+|\d+)', [('id', 'U128'),('dataset', 'U128'),('v0', np.float32)])
 
     # sort data
     predictions.sort(order='id')
@@ -106,10 +105,32 @@ def get_scores(filename, competition_id):
     if predictions['id'].size == 0 or not np.array_equal(predictions['id'], groundtruth['id']):
         raise ParsingError("Error parsing the submission file. Make sure it has the right format and contains the right ids.")
     
-    # partition the data indices into two sets and evaluate separately
-    splitpoint = int(np.round(len(groundtruth) * 0.15))
-    score_p = roc_auc_score(groundtruth['v0'][:splitpoint], predictions['v0'][:splitpoint])
-    score_f = roc_auc_score(groundtruth['v0'][splitpoint:], predictions['v0'][splitpoint:])
+    # split datasets
+    predictions_PolandNFC = []
+    groundtruth_PolandNFC = []
+    predictions_warblrb10k = []
+    groundtruth_warblrb10k = []
+    predictions_chern = []
+    groundtruth_chern = []
+    for i, _ in enumerate(groundtruth):
+        if groundtruth['dataset'][i] == 'PolandNFC':
+            predictions_PolandNFC.append(predictions['v0'][i])
+            groundtruth_PolandNFC.append(groundtruth['v0'][i])
+        elif groundtruth['dataset'][i] == 'warblrb10k':
+            predictions_warblrb10k.append(predictions['v0'][i])
+            groundtruth_warblrb10k.append(groundtruth['v0'][i])
+        else:
+            predictions_chern.append(predictions['v0'][i])
+            groundtruth_chern.append(groundtruth['v0'][i])
+
+    # compute scores for all datasets
+    score_PolandNFC = roc_auc_score(groundtruth_PolandNFC, predictions_PolandNFC)
+    score_warblrb10k = roc_auc_score(groundtruth_warblrb10k, predictions_warblrb10k)
+    score_chern = roc_auc_score(groundtruth_chern, predictions_chern)
+
+    # compute preview / final scores
+    score_p = hmean([score_warblrb10k, score_chern])
+    score_f = hmean([score_warblrb10k, score_chern, score_PolandNFC])
     
     return (score_p, score_f)
 
