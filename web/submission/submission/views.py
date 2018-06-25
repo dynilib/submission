@@ -17,8 +17,8 @@ from sqlalchemy import Date, cast
 import numpy as np
 from sklearn.metrics import roc_auc_score
 
-from app import app, security, db
-from models import User, Competition, Submission
+from submission import app, security, db
+from submission.models import User, Competition, Submission
 
 
 @app.route('/')

@@ -1,6 +1,6 @@
 from flask_security import UserMixin, RoleMixin
 
-from database import db
+from submission import db
 
 roles_users = db.Table('roles_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
