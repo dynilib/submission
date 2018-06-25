@@ -16,7 +16,7 @@ from sqlalchemy import Date, cast
 
 import numpy as np
 from sklearn.metrics import roc_auc_score
-from scipy.stats import import hmean
+from scipy.stats import hmean
 
 from submission import app, security, db
 from submission.models import User, Competition, Submission
