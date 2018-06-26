@@ -96,7 +96,7 @@ def get_scores(filename, competition_id):
     # parse files
     predictions = np.fromregex(filename, r'(.+),(\d+\.\d+|\d+)', [('id', 'U128'), ('v0', np.float32)])
     groundtruth_filename = os.path.join(app.config['GROUNDTRUTH_FOLDER'], Competition.query.get(competition_id).groundtruth)
-    groundtruth = np.fromregex(groundtruth_filename, r'(.+),(.+),(\d+\.\d+|\d+)', [('id', 'U128'),('dataset', 'U128'),('v0', np.float32)])
+    groundtruth = np.fromregex(groundtruth_filename, r'(.+),(.+),(\d+\.\d+|\d+)', [('id', 'U128'),('datasetid', 'U128'),('v0', np.float32)])
 
     # sort data
     predictions.sort(order='id')
@@ -105,32 +105,49 @@ def get_scores(filename, competition_id):
     if predictions['id'].size == 0 or not np.array_equal(predictions['id'], groundtruth['id']):
         raise ParsingError("Error parsing the submission file. Make sure it has the right format and contains the right ids.")
     
-    # split datasets
-    predictions_PolandNFC = []
-    groundtruth_PolandNFC = []
-    predictions_warblrb10k = []
-    groundtruth_warblrb10k = []
+    # split according to datasetid
+    predictions_poland = []
+    groundtruth_poland = []
+    predictions_warblr = []
+    groundtruth_warblr = []
     predictions_chern = []
     groundtruth_chern = []
     for i, _ in enumerate(groundtruth):
-        if groundtruth['dataset'][i] == 'PolandNFC':
-            predictions_PolandNFC.append(predictions['v0'][i])
-            groundtruth_PolandNFC.append(groundtruth['v0'][i])
-        elif groundtruth['dataset'][i] == 'warblrb10k':
-            predictions_warblrb10k.append(predictions['v0'][i])
-            groundtruth_warblrb10k.append(groundtruth['v0'][i])
+        if groundtruth['datasetid'][i] == 'PolandNFC':
+            predictions_poland.append(predictions['v0'][i])
+            groundtruth_poland.append(groundtruth['v0'][i])
+        elif groundtruth['datasetid'][i] == 'warblrb10k':
+            predictions_warblr.append(predictions['v0'][i])
+            groundtruth_warblr.append(groundtruth['v0'][i])
         else:
             predictions_chern.append(predictions['v0'][i])
             groundtruth_chern.append(groundtruth['v0'][i])
 
+    # take 12% of Chern+warblr for preview, and the remaining 88% of Chern+warblr plus 100% of Poland for final.
+    preview_ratio = 0.12
+
+    chern_split_point = int(preview_ratio * len(predictions_chern))
+    predictions_chern_p = predictions_chern[:chern_split_point]
+    groundtruth_chern_p = groundtruth_chern[:chern_split_point]
+    predictions_chern_f = predictions_chern[chern_split_point:]
+    groundtruth_chern_f = groundtruth_chern[chern_split_point:]
+
+    warblr_split_point = int(preview_ratio * len(predictions_warblr))
+    predictions_warblr_p = predictions_warblr[:warblr_split_point]
+    groundtruth_warblr_p = groundtruth_warblr[:warblr_split_point]
+    predictions_warblr_f = predictions_warblr[warblr_split_point:]
+    groundtruth_warblr_f = groundtruth_warblr[warblr_split_point:]
+
     # compute scores for all datasets
-    score_PolandNFC = roc_auc_score(groundtruth_PolandNFC, predictions_PolandNFC)
-    score_warblrb10k = roc_auc_score(groundtruth_warblrb10k, predictions_warblrb10k)
-    score_chern = roc_auc_score(groundtruth_chern, predictions_chern)
+    score_poland = roc_auc_score(groundtruth_poland, predictions_poland)
+    score_warblr_p = roc_auc_score(groundtruth_warblr_p, predictions_warblr_p)
+    score_warblr_f = roc_auc_score(groundtruth_warblr_f, predictions_warblr_f)
+    score_chern_p = roc_auc_score(groundtruth_chern_p, predictions_chern_p)
+    score_chern_f = roc_auc_score(groundtruth_chern_f, predictions_chern_f)
 
     # compute preview / final scores
-    score_p = hmean([score_warblrb10k, score_chern])
-    score_f = hmean([score_warblrb10k, score_chern, score_PolandNFC])
+    score_p = hmean([score_warblr_p, score_chern_p])
+    score_f = hmean([score_warblr_f, score_chern_f, score_poland])
     
     return (score_p, score_f)
 
