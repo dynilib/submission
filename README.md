@@ -81,8 +81,8 @@ This can be done by editing the admin user data in localhost:5455/admin/user/.
  
 ### 3 - Create a competition
 
-**WARNING: because of short time constraint, some datasetid have been hardcoded [here](https://github.com/julj/submission/blob/8f9a0add4eb543f9d625b36998f6cc682b079caf/web/submission/submission/views.py#L115).
-**
+**WARNING: because of short time constraint, some datasetid have been hardcoded [here](https://github.com/julj/submission/blob/8f9a0add4eb543f9d625b36998f6cc682b079caf/web/submission/submission/views.py#L115).**
+
 
 
 
