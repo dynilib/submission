@@ -189,7 +189,7 @@ def get_submissions():
                                 s.first().submitted_on.strftime("%b %d, %Y"),
                                 User.query.get(u).username,
                                 score,
-                                s.first().comment)
+                                s.first().comment.replace('\n',' ').replace('\r',' '))
                 else:
                     row += ',{"v":"null"}'
                     row += ',{"v":"null"}'
